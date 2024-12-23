@@ -1,0 +1,179 @@
+#include <iostream>
+
+#include <vector>
+
+#include <cstdlib>
+
+#include <ctime>
+
+#include <string>
+
+
+
+const int MAX_ATTEMPTS = 5; // Максимальна кількість невдалих спроб
+
+
+
+void displayWord(const std::vector<char>& word) {
+
+    for (char c : word) {
+
+        std::cout << c << " ";
+
+    }
+
+    std::cout << std::endl;
+
+}
+
+
+
+int main() {
+
+    // Матриця слів
+
+    std::vector<std::vector<char>> WORDS = {
+
+        {'c', 'o', 'd', 'e'},
+
+        {'g', 'a', 'm', 'e'},
+
+        {'p', 'l', 'a', 'y'},
+
+        {'f', 'u', 'n'}
+
+    };
+
+
+
+    // Ініціалізація випадковості
+
+    std::srand(static_cast<unsigned>(std::time(0)));
+
+
+
+    // Вибір випадкового слова
+
+    int randomIndex = std::rand() % WORDS.size();
+
+    std::vector<char> chosenWord = WORDS[randomIndex];
+
+    
+
+    // Створюємо масив для відображення слова із зірочками
+
+    std::vector<char> displayedWord(chosenWord.size(), '*');
+
+
+
+    int attemptsLeft = MAX_ATTEMPTS;
+
+    bool guessed = false;
+
+
+
+    std::cout << "\nГра 'Вгадай Слово' починається!" << std::endl;
+
+    std::cout << "Ви повинні вгадати слово, замінивши * на правильні літери." << std::endl;
+
+    std::cout << "У вас є " << MAX_ATTEMPTS << " спроб. Удачі!\n" << std::endl;
+
+
+
+    while (attemptsLeft > 0 && !guessed) {
+
+        std::cout << "Слово: ";
+
+        displayWord(displayedWord);
+
+        
+
+        // Введення користувача
+
+        char letter;
+
+        int position;
+
+        std::cout << "Введіть літеру: ";
+
+        std::cin >> letter;
+
+        std::cout << "Введіть позицію (1-" << chosenWord.size() << "): ";
+
+        std::cin >> position;
+
+
+
+        // Перевірка позиції
+
+        if (position < 1 || position > chosenWord.size()) {
+
+            std::cout << "Некоректна позиція! Спробуйте ще раз.\n";
+
+            continue;
+
+        }
+
+
+
+        // Перевірка літери
+
+        position--; // Переходимо до індексації з 0
+
+        if (chosenWord[position] == letter) {
+
+            displayedWord[position] = letter;
+
+            std::cout << "Ви вгадали!\n";
+
+        } else {
+
+            attemptsLeft--;
+
+            std::cout << "Помилка! Невірна літера. Залишилось спроб: " << attemptsLeft << "\n";
+
+        }
+
+
+
+        // Перевірка, чи вгадане слово повністю
+
+        guessed = true;
+
+        for (size_t i = 0; i < displayedWord.size(); i++) {
+
+            if (displayedWord[i] == '*') {
+
+                guessed = false;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+
+    // Результати гри
+
+    if (guessed) {
+
+        std::cout << "\nВітаємо! Ви вгадали слово: ";
+
+        displayWord(chosenWord);
+
+    } else {
+
+        std::cout << "\nГру завершено. Ви програли! Слово було: ";
+
+        displayWord(chosenWord);
+
+    }
+
+
+
+    return 0;
+
+}
